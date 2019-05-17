@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mic2"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Audio Recorder"
+            android:textSize="50dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recording panel"
+            android:textSize="30dp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/rec_button"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/ic_record"/>
+        <ImageButton
+            android:id="@+id/stop_start_button"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/ic_pause"/>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/get_name"/>
+
+        <EditText
+            android:id="@+id/et_surname"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/get_surname"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_title"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/get_title"/>
+
+        <EditText
+            android:id="@+id/et_discription"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/get_discription"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/save_button"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/ic_save_inactive"/>
+        <ImageButton
+            android:id="@+id/delete_button"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/ic_delete_inactive"/>
+        <ImageButton
+            android:id="@+id/list_button"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/ic_view_list"/>
+
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/debug"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+
+
+
+
+
+</LinearLayout>
