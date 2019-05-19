@@ -80,6 +80,11 @@ public class MainActivity extends AppCompatActivity {
     File tempFile; // temp pcm file
 
 
+    Equalizer equalizer;
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -388,24 +393,25 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
 
             byte[] b = new byte[bufferSize];
-            ByteBuffer byteBuffer;
-            short val;
+
+
 
             try{
                 FileOutputStream fos = new FileOutputStream(tempFile, append);
                // fos.write(prepareWavFileHeader(BITS_PER_SAMPLE, 0, totalDataLen, SAMPLING_RATE_IN_HZ, CHANNEL_CONFIG, bytesPerSecond));
                 //fos.write(prepareWavHeader(totalDataLen));
 
+                equalizer = new Equalizer(fos);
 
                 while(recordingInProgress.get()){
                     b = audioBufferQueue.take();
-                    fos.write(b);
 
-                    byteBuffer = ByteBuffer.wrap(b);
-                    val = byteBuffer.order(ByteOrder.LITTLE_ENDIAN).getShort();
+                    equalizer.put(b);
 
-                    Log.d("SAMPLE VALUE ->", "BYTE: "+ Integer.toString(val));
+                    //fos.write(b);
+
                 }
+                equalizer.writeToFile();
                 fos.close();
             }
             catch(Exception e){

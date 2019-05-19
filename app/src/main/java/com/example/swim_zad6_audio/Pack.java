@@ -17,12 +17,14 @@ public class Pack {
         this.AM_OF_SAMPLES = AM_OF_SAMPLES;
         this.VALUE = 0;
         this.COUNTER = 1;
+        this.array = new ArrayList<>();
     }
 
     public boolean put(byte[] B, long val){
 
         this.VALUE += Math.abs(val);
         this.COUNTER ++;
+        array.add(B);
 
         if(this.COUNTER >= AM_OF_SAMPLES){
             return true;
@@ -34,6 +36,8 @@ public class Pack {
     public long getAverage(){
         return this.VALUE/this.COUNTER;
     }
+
+
 
     public void writeToFile(FileOutputStream fos){
         for(byte[] B: array){

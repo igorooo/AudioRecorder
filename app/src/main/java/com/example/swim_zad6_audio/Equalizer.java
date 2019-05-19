@@ -1,5 +1,7 @@
 package com.example.swim_zad6_audio;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
@@ -40,10 +42,13 @@ public class Equalizer {
 
         if(isPackFull){
 
+
             arrayPack.add(currentPack);
-            currentPack = new Pack(this.SAMPLES_IN_ONE_PACK);
+
 
             if( currentPack.getAverage() < this.TRESHOLD ){
+
+                Log.d("EQUALIZER ###", "UNDER TRESHOLD");
 
                 if(arrayPack.size() >= SILANCE_PERIOD_TO_RM){
                     arrayPack.clear();
@@ -53,7 +58,15 @@ public class Equalizer {
             else{
                 this.writeToFile();
             }
+
+            //this.writeToFile();
+           // Log.d("WIRTE TO FILE - ##", "written");
+            currentPack = new Pack(this.SAMPLES_IN_ONE_PACK);
+
         }
+
+
+
         return true;
     }
 
