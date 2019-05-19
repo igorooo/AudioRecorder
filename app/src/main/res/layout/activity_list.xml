@@ -6,30 +6,29 @@
     android:orientation="vertical"
     tools:context=".ListActivity">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        >
-
+        android:layout_height="500dp">
         <ListView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </ListView>
 
-
-    </ScrollView>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center">
 
-        <ImageButton
-            android:id="@+id/list_play"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="@drawable/ic_start"
+        <TextView
+            android:id="@+id/tv_elementDicription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             />
+
+
 
     </LinearLayout>
 

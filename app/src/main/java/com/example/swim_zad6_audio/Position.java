@@ -1,15 +1,18 @@
 package com.example.swim_zad6_audio;
 
+import java.io.File;
+
 public class Position {
 
-    String Name, Surname, Title, Discription, Path, Date;
+    String Name, Surname, Title, Discription, Date;
+    File file;
 
-    public Position(String Name, String Surname, String Title, String Discription,String Date, String Path){
+    public Position(String Name, String Surname, String Title, String Discription,String Date, File file){
         this.Name = Name;
         this.Surname = Surname;
         this.Title = Title;
         this.Discription = Discription;
-        this.Path = Path;
+        this.file = file;
         this.Date = Date;
     }
 
@@ -29,8 +32,8 @@ public class Position {
         return Discription;
     }
 
-    public String getPath() {
-        return Path;
+    public File getFile() {
+        return file;
     }
 
     public String getDate() {

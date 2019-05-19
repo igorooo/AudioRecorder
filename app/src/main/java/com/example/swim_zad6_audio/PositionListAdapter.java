@@ -43,15 +43,16 @@ public class PositionListAdapter extends ArrayAdapter<Position> {
         convertView = inflater.inflate(mResource, parent, false);
 
         TextView tv_title = (TextView) convertView.findViewById(R.id.ad_title);
-        TextView tv_discription = (TextView) convertView.findViewById(R.id.ad_discription);
+       // TextView tv_discription = (TextView) convertView.findViewById(R.id.ad_discription);
         TextView tv_name= (TextView) convertView.findViewById(R.id.ad_name);
         TextView tv_surname= (TextView) convertView.findViewById(R.id.ad_surname);
         TextView tv_date= (TextView) convertView.findViewById(R.id.ad_date);
 
         tv_title.setText(Title);
         tv_name.setText(Name);
-        tv_discription.setText(Discription);
+       // tv_discription.setText(Discription);
         tv_surname.setText(Surname);
+        tv_date.setText(Date);
 
         return convertView;
     }

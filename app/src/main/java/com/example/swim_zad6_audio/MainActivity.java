@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
@@ -17,8 +18,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -26,13 +31,28 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.sql.Array;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainActivity extends AppCompatActivity {
+
+    /**
+     * SHARED PREFERENCES CONSANTS
+     */
+
+    private final String SHARED_PREFS = "SHAREDPREFS";
+    private final String SP_LIST_OF_RECORDS = "RECORDS";
+
+    ArrayList<Position> arrayList;
+
 
     private final int  INACTIVE_STATE = 1, RECORDING_STATE = 2, PAUSED_STATE = 3, RECORDED_STATE = 4;
     private int INTERFACE_STATE;
@@ -50,17 +70,14 @@ public class MainActivity extends AppCompatActivity {
     EditText et_name, et_surname, et_title, et_discription;
 
     AudioRecord audioRecord;
-    Thread readThread, provider, processor;
 
     LinkedBlockingQueue<byte[]> audioBufferQueue;
 
     private AtomicBoolean recordingInProgress;
 
     File fileDir; // PATH to directory
-    File currentFile;
-
-    File tempFile;
-    String tempFilepath;
+    File currentFile; // wav file
+    File tempFile; // temp pcm file
 
 
 
@@ -204,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
 
         try{
             rawToWave(tempFile, currentFile);
+            addPosition(currentFile);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -369,13 +387,24 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
 
+            byte[] b = new byte[bufferSize];
+            ByteBuffer byteBuffer;
+            short val;
+
             try{
                 FileOutputStream fos = new FileOutputStream(tempFile, append);
                // fos.write(prepareWavFileHeader(BITS_PER_SAMPLE, 0, totalDataLen, SAMPLING_RATE_IN_HZ, CHANNEL_CONFIG, bytesPerSecond));
                 //fos.write(prepareWavHeader(totalDataLen));
 
+
                 while(recordingInProgress.get()){
-                    fos.write(audioBufferQueue.take());
+                    b = audioBufferQueue.take();
+                    fos.write(b);
+
+                    byteBuffer = ByteBuffer.wrap(b);
+                    val = byteBuffer.order(ByteOrder.LITTLE_ENDIAN).getShort();
+
+                    Log.d("SAMPLE VALUE ->", "BYTE: "+ Integer.toString(val));
                 }
                 fos.close();
             }
@@ -442,74 +471,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    /***
-     * WAV METHODS HERE
-     *
-     *
-     */
-
-
-
-
-
-    private byte[] prepareWavHeader(int pcmDataLengthInBytes) {
-        int totalDataLen = pcmDataLengthInBytes + 36;
-        byte[] wavHeader = prepareWavFileHeader(BITS_PER_SAMPLE, pcmDataLengthInBytes,totalDataLen,
-                SAMPLING_RATE_IN_HZ,CHANNEL_CONFIG,bytesPerSecond);
-        return wavHeader;
-    }
-
-    private byte[] prepareWavFileHeader(int bitsPerSample, long totalAudioLen,
-                                        long totalDataLen, long longSampleRate,
-                                        int channels, long byteRate) {
-        byte[] header = new byte[44];
-        header[0] = 'R';  // RIFF/WAVE header
-        header[1] = 'I';
-        header[2] = 'F';
-        header[3] = 'F';
-        header[4] = (byte) (totalDataLen & 0xff);
-        header[5] = (byte) ((totalDataLen >> 8) & 0xff);
-        header[6] = (byte) ((totalDataLen >> 16) & 0xff);
-        header[7] = (byte) ((totalDataLen >> 24) & 0xff);
-        header[8] = 'W';
-        header[9] = 'A';
-        header[10] = 'V';
-        header[11] = 'E';
-        header[12] = 'f';  // 'fmt ' chunk
-        header[13] = 'm';
-        header[14] = 't';
-        header[15] = ' ';
-        header[16] = 16;  // 4 bytes: size of 'fmt ' chunk
-        header[17] = 0;
-        header[18] = 0;
-        header[19] = 0;
-        header[20] = 1;  // format = 1
-        header[21] = 0;
-        header[22] = (byte) channels;
-        header[23] = 0;
-        header[24] = (byte) (longSampleRate & 0xff);
-        header[25] = (byte) ((longSampleRate >> 8) & 0xff);
-        header[26] = (byte) ((longSampleRate >> 16) & 0xff);
-        header[27] = (byte) ((longSampleRate >> 24) & 0xff);
-        header[28] = (byte) (byteRate & 0xff);
-        header[29] = (byte) ((byteRate >> 8) & 0xff);
-        header[30] = (byte) ((byteRate >> 16) & 0xff);
-        header[31] = (byte) ((byteRate >> 24) & 0xff);
-        header[32] = (byte) (2 * 16 / 8);  // block align
-        header[33] = 0;
-        header[34] = (byte) bitsPerSample;  // bits per sample
-        header[35] = 0;
-        header[36] = 'd';
-        header[37] = 'a';
-        header[38] = 't';
-        header[39] = 'a';
-        header[40] = (byte) (totalAudioLen & 0xff);
-        header[41] = (byte) ((totalAudioLen >> 8) & 0xff);
-        header[42] = (byte) ((totalAudioLen >> 16) & 0xff);
-        header[43] = (byte) ((totalAudioLen >> 24) & 0xff);
-        return header;
-    }
-
     private File getPublicStorageDir(){
 
         File pathFile = new File(Environment.getExternalStorageDirectory()+File.separator+FOLDER_NAME);
@@ -545,7 +506,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    // NO MINE
+    // to WAV from SOF
 
     private void rawToWave(final File rawFile, final File waveFile) throws IOException {
 
@@ -634,6 +595,95 @@ public class MainActivity extends AppCompatActivity {
             output.write(value.charAt(i));
         }
     }
+
+
+    /***
+     * SHARED PREFS METHODS
+     */
+
+    public void loadData(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(SP_LIST_OF_RECORDS,"");
+
+        Type type = new TypeToken<ArrayList<Position>>(){}.getType();
+
+        arrayList = gson.fromJson(json, type);
+
+        if(arrayList == null){
+            arrayList = new ArrayList<Position>();
+        }
+    }
+
+    public void addPosition(File file){
+
+        boolean nameF = (et_name.getText().toString()).equals(getString(R.string.get_name));
+        boolean surnameF = (et_surname.getText().toString()).equals(getString(R.string.get_surname));
+        boolean titleF = (et_title.getText().toString()).equals(getString(R.string.get_title));
+        boolean discrF = (et_discription.getText().toString()).equals(getString(R.string.get_discription));
+
+
+
+
+        String name = ( nameF ? "-" : et_name.getText().toString());
+        String surname = ( surnameF ? "-" : et_surname.getText().toString());
+        String title = ( titleF ? "-" : et_title.getText().toString());
+        String discription = ( discrF ? "-" : et_discription.getText().toString());
+
+        Date time;
+        String TIME = "";
+
+
+        try{
+            String fileName = file.getAbsolutePath();
+            String[] tokens = fileName.split("-");
+            tokens = tokens[1].split("\\.");
+            Log.d("TIME LOG", tokens[0]);
+            time = new Date(Long.parseLong(tokens[0]));
+            TIME = time.toString();
+            Log.d("TIME LOG", TIME);
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        Position position = new Position(name,surname,title,discription,TIME, file);
+
+        loadData();
+
+        arrayList.add(position);
+
+        ArrayList<Position> indexes = new ArrayList<>();
+
+        for(Position pos: arrayList){
+
+            if( !pos.getFile().exists() ){
+                indexes.add(pos);
+            }
+        }
+
+        for(Position pos: indexes){
+            arrayList.remove(pos);
+        }
+
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(arrayList);
+        editor.putString(SP_LIST_OF_RECORDS,json);
+        editor.apply();
+
+
+    }
+
+
+    public void EditTextClick(View v){
+        ((EditText)v).getText().clear();
+    }
+
+
 
 
 }
