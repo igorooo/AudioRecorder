@@ -63,10 +63,11 @@
 
    </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:layout_weight="0.2">
+        android:layout_weight="0.2"
+        android:descendantFocusability="blocksDescendants">
 
         <CheckBox
             android:layout_gravity="center"
@@ -74,6 +75,6 @@
             android:layout_width="30dp"
             android:layout_height="30dp" />
 
-    </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

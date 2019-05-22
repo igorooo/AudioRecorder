@@ -14,7 +14,7 @@ public class Equalizer {
     private final int SAMPLING_RATE_IN_HZ = 44100;
     private int PART_OF_SECOND = 4;  // 1 part is 0.25 (1/4) of second
     private int SILANCE_PERIOD_TO_RM = 8; // in PACKS
-    private int TRESHOLD = 500;
+    private int TRESHOLD = 800;
 
 
     private int SAMPLES_IN_ONE_PACK = SAMPLING_RATE_IN_HZ/PART_OF_SECOND;
@@ -31,6 +31,10 @@ public class Equalizer {
         this.fos = fos;
         this.arrayPack = new ArrayList<>();
         this.currentPack = new Pack(this.SAMPLES_IN_ONE_PACK);
+    }
+
+    public void setTRESHOLD(int TRESHOLD) {
+        this.TRESHOLD = TRESHOLD;
     }
 
     public boolean put(byte[] b){

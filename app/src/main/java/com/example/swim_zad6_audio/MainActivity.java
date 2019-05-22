@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<Position> arrayList;
 
+    private int Treshold = 800;
+
+
+
 
     private final int  INACTIVE_STATE = 1, RECORDING_STATE = 2, PAUSED_STATE = 3, RECORDED_STATE = 4;
     private int INTERFACE_STATE;
@@ -68,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
     ImageButton record_Button, start_stop_Button, save_Button, delete_Button, list_Button;
     EditText et_name, et_surname, et_title, et_discription;
+    SeekBar seekBar;
 
     AudioRecord audioRecord;
 
@@ -101,6 +107,10 @@ public class MainActivity extends AppCompatActivity {
         save_Button = (ImageButton) findViewById(R.id.save_button);
         delete_Button = (ImageButton) findViewById(R.id.delete_button);
         list_Button= (ImageButton) findViewById(R.id.list_button);
+
+        seekBar = (SeekBar) findViewById(R.id.TresholdSeekBar);
+        seekBar.setMin(200);
+        seekBar.setMax(2000);
 
         et_name = (EditText) findViewById(R.id.et_name);
         et_surname = (EditText) findViewById(R.id.et_surname);
@@ -154,6 +164,27 @@ public class MainActivity extends AppCompatActivity {
         audioBufferQueue = new LinkedBlockingQueue<byte[]>();
         recordingInProgress = new AtomicBoolean(false);
         fileDir = getPublicStorageDir();
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                Treshold = progress;
+                if(equalizer != null){
+                    equalizer.setTRESHOLD(progress);
+                }
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
     }
 
@@ -238,6 +269,10 @@ public class MainActivity extends AppCompatActivity {
 
         currentFile.delete();
         tempFile.delete();
+        et_discription.setText("");
+        et_name.setText("");
+        et_surname.setText("");
+        et_title.setText("");
     }
 
 
@@ -402,6 +437,7 @@ public class MainActivity extends AppCompatActivity {
                 //fos.write(prepareWavHeader(totalDataLen));
 
                 equalizer = new Equalizer(fos);
+                equalizer.setTRESHOLD(Treshold);
 
                 while(recordingInProgress.get()){
                     b = audioBufferQueue.take();
