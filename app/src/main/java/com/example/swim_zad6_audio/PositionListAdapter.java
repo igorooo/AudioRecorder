@@ -22,9 +22,9 @@ public class PositionListAdapter extends ArrayAdapter<Position> {
 
     private Context mContext;
     private int mResource;
-    private Map<File, CheckBox> map;
+    private Map<Position, CheckBox> map;
 
-    public PositionListAdapter(Context context, int resource,List<Position> objects, Map<File, CheckBox> map) {
+    public PositionListAdapter(Context context, int resource,List<Position> objects, Map<Position, CheckBox> map) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
@@ -55,7 +55,7 @@ public class PositionListAdapter extends ArrayAdapter<Position> {
         TextView tv_date= (TextView) convertView.findViewById(R.id.ad_date);
         CheckBox cb_select = (CheckBox) convertView.findViewById(R.id.cb_selected);
 
-        map.put(file,cb_select);
+        map.put(getItem(position),cb_select);
 
 
 

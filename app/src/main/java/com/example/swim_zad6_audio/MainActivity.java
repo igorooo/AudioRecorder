@@ -57,9 +57,9 @@ public class MainActivity extends AppCompatActivity {
     private final int  INACTIVE_STATE = 1, RECORDING_STATE = 2, PAUSED_STATE = 3, RECORDED_STATE = 4;
     private int INTERFACE_STATE;
 
-    private final int SAMPLING_RATE_IN_HZ = 44100;
-    private final int CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO;
-    private final int BITS_PER_SAMPLE = 16;
+    public final int SAMPLING_RATE_IN_HZ = 44100;
+    public final int CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO;
+    public final int BITS_PER_SAMPLE = 16;
     private final int bufferSize = 2;
     private final int bytesPerSecond = SAMPLING_RATE_IN_HZ * 2; // (2 bytes per sample)
     private int totalDataLen = 36;
