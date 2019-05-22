@@ -9,9 +9,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -19,6 +23,8 @@ import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Queue;
 
 public class ListActivity extends AppCompatActivity {
@@ -33,6 +39,10 @@ public class ListActivity extends AppCompatActivity {
     private TextView tv_Discription;
     private PositionListAdapter adapter;
 
+    Map<File, CheckBox> map;
+
+    ImageButton delB, mergeB;
+
     MediaPlayer mediaPlayer;
 
     File dir;
@@ -42,13 +52,18 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+        map = new HashMap<>();
+
         loadData();
 
         listView = (ListView) findViewById(R.id.listView);
         tv_Discription = (TextView) findViewById(R.id.tv_elementDicription);
+        delB = (ImageButton) findViewById(R.id.buttonDelete);
+        mergeB = (ImageButton) findViewById(R.id.buttonMerge);
 
-        adapter = new PositionListAdapter(this, R.layout.adapter_view_layout, arrayList);
+        adapter = new PositionListAdapter(this, R.layout.adapter_view_layout, arrayList, map);
         listView.setAdapter(adapter);
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
 
 
@@ -73,6 +88,29 @@ public class ListActivity extends AppCompatActivity {
                 tv_Discription.setText(arrayList.get(position).getDiscription());
             }
         });
+
+        mergeB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onDeleteClick();
+            }
+        });
+
+
+    }
+
+    private void onDeleteClick(){
+
+        int kk = 0;
+
+        for(Map.Entry<File,CheckBox> entry: map.entrySet()){
+            if(entry.getValue().isChecked()){
+                kk++;
+            }
+        }
+
+        Toast.makeText(this, Integer.toString(kk), Toast.LENGTH_SHORT).show();
+
     }
 
 

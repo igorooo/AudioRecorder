@@ -7,10 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public class PositionListAdapter extends ArrayAdapter<Position> {
 
@@ -19,11 +22,13 @@ public class PositionListAdapter extends ArrayAdapter<Position> {
 
     private Context mContext;
     private int mResource;
+    private Map<File, CheckBox> map;
 
-    public PositionListAdapter(Context context, int resource,List<Position> objects) {
+    public PositionListAdapter(Context context, int resource,List<Position> objects, Map<File, CheckBox> map) {
         super(context, resource, objects);
         mContext = context;
         mResource = resource;
+        this.map = map;
     }
 
     @NonNull
@@ -35,6 +40,7 @@ public class PositionListAdapter extends ArrayAdapter<Position> {
         String Surname = getItem(position).getSurname();
         String Discription= getItem(position).getDiscription();
         String Date = getItem(position).getDate();
+        File file = getItem(position).getFile();
 
 
         //Position pos = new Position(Title,Author,Date,Rating,isFilm);
@@ -47,6 +53,11 @@ public class PositionListAdapter extends ArrayAdapter<Position> {
         TextView tv_name= (TextView) convertView.findViewById(R.id.ad_name);
         TextView tv_surname= (TextView) convertView.findViewById(R.id.ad_surname);
         TextView tv_date= (TextView) convertView.findViewById(R.id.ad_date);
+        CheckBox cb_select = (CheckBox) convertView.findViewById(R.id.cb_selected);
+
+        map.put(file,cb_select);
+
+
 
         tv_title.setText(Title);
         tv_name.setText(Name);

@@ -1,11 +1,14 @@
 package com.example.swim_zad6_audio;
 
+import android.widget.CheckBox;
+
 import java.io.File;
 
 public class Position {
 
     String Name, Surname, Title, Discription, Date;
     File file;
+    Boolean selected;
 
     public Position(String Name, String Surname, String Title, String Discription,String Date, File file){
         this.Name = Name;
@@ -14,7 +17,10 @@ public class Position {
         this.Discription = Discription;
         this.file = file;
         this.Date = Date;
+        this.selected = false;
     }
+
+
 
     public String getTitle() {
         return Title;

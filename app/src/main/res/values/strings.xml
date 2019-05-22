@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">swim_zad6_audio</string>
+    <string name="app_name">swim_zad6_audio_v2</string>
     <string name="get_name">Enter name</string>
     <string name="get_surname">Enter surname</string>
     <string name="get_title">Enter title</string>
